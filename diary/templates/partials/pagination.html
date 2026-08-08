@@ -1,0 +1,36 @@
+{% set base_qs = extra_query_string(request) %}
+<nav class="pagination" aria-label="Pagination">
+  {% if entries_page.has_prev %}
+  <a class="pagination-prev" href="?{{ base_qs }}page={{ entries_page.page - 1 }}&page_size={{ entries_page.page_size }}">
+    <span>&larr;</span>
+    <span>Newer</span>
+  </a>
+  {% else %}
+  <span class="pagination-prev" aria-disabled="true">
+    <span>&larr;</span>
+    <span>Newer</span>
+  </span>
+  {% endif %}
+
+  {% for num in entries_page.page_numbers() %}
+    {% if num is none %}
+    <span class="pagination-ellipsis">&hellip;</span>
+    {% elif num == entries_page.page %}
+    <span aria-current="page">{{ num }}</span>
+    {% else %}
+    <a href="?{{ base_qs }}page={{ num }}&page_size={{ entries_page.page_size }}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if entries_page.has_next %}
+  <a class="pagination-next" href="?{{ base_qs }}page={{ entries_page.page + 1 }}&page_size={{ entries_page.page_size }}">
+    <span>Older</span>
+    <span>&rarr;</span>
+  </a>
+  {% else %}
+  <span class="pagination-next" aria-disabled="true">
+    <span>Older</span>
+    <span>&rarr;</span>
+  </span>
+  {% endif %}
+</nav>

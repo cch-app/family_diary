@@ -1,0 +1,20 @@
+<form class="page-size-form" method="get">
+  {% for key, value in request.query_params.multi_items() %}
+    {% if key not in ("page", "page_size") %}
+    <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endif %}
+  {% endfor %}
+  <label for="page_size">
+    Per page
+    <select
+      id="page_size"
+      name="page_size"
+      class="input"
+      onchange="this.form.submit()"
+    >
+      {% for size in page_size_options %}
+      <option value="{{ size }}" {% if size == entries_page.page_size %}selected{% endif %}>{{ size }}</option>
+      {% endfor %}
+    </select>
+  </label>
+</form>

@@ -1,3 +1,8 @@
+# Family Diary: local-only sensitive files (never publish real identifiers)
+content/denylists/*.yaml
+!content/denylists/README.md
+backups/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -216,3 +221,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# AI
+.tokensave
