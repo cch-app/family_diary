@@ -1,0 +1,26 @@
+{% set cover = (entry.frontmatter.media | selectattr('reviewed_safe') | first) if entry.frontmatter.media else none %}
+<article class="entry-card">
+  <div class="entry-card-row">
+    {% if cover %}
+    <img class="plate plate-thumb" src="/media/{{ cover.path }}" alt="{{ cover.alt }}" loading="lazy">
+    {% endif %}
+    <div class="entry-card-body">
+      <p class="entry-date">{{ entry.frontmatter.date.strftime("%B %-d, %Y") }}</p>
+      <h2 class="entry-title">
+        <a href="/entries/{{ entry.slug }}">{{ entry.frontmatter.title }}</a>
+        {% if entry.frontmatter.milestone %}<span class="milestone-badge">Milestone</span>{% endif %}
+      </h2>
+      {% if entry.frontmatter.author_label %}
+      <p class="entry-meta">by {{ entry.frontmatter.author_label }}</p>
+      {% endif %}
+      {% if entry.frontmatter.excerpt %}
+      <p class="entry-excerpt">{{ entry.frontmatter.excerpt }}</p>
+      {% endif %}
+      {% if entry.frontmatter.tags %}
+      <p class="entry-tags">
+        {% for tag in entry.frontmatter.tags %}<a class="tag" href="/tags/{{ tag }}">#{{ tag }}</a>{% endfor %}
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</article>

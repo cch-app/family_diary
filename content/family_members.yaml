@@ -1,0 +1,13 @@
+members:
+  - label: "Mom"
+    role: "parent"
+    color: "#c97b63"
+  - label: "Dad"
+    role: "parent"
+    color: "#5b7f9e"
+  - label: "Kid A"
+    role: "child"
+    color: "#e0a458"
+  - label: "Grandma"
+    role: "grandparent"
+    color: "#8a7ca8"

@@ -1,0 +1,8 @@
+members:
+  - label: "Mom"
+    role: "parent"
+  - label: "Dad"
+    role: "parent"
+  - label: "Kid A"
+    role: "child"
+    color: "#e8b4b8"

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">The Diary</h1>
+{% if entries_page.items %}
+  {% include "partials/page_size_selector.html" %}
+  {% for entry in entries_page.items %}
+    {% include "partials/entry_card.html" %}
+  {% endfor %}
+  {% include "partials/pagination.html" %}
+{% else %}
+  <p class="empty-state">No entries yet.</p>
+{% endif %}
+{% endblock %}

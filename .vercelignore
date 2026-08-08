@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.tokensave/
+.claude/
+tests/
+backups/
+content/denylists/*.yaml
+.git/

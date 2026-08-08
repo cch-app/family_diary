@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+{% set safe_media = (entry.frontmatter.media | selectattr('reviewed_safe') | list) if entry.frontmatter.media else [] %}
+{% set cover = safe_media[0] if safe_media else none %}
+{% set gallery = safe_media[1:] if safe_media | length > 1 else [] %}
+<article class="entry-detail">
+  <p class="entry-date">{{ entry.frontmatter.date.strftime("%B %-d, %Y") }}</p>
+  <h1 class="entry-title">{{ entry.frontmatter.title }}
+    {% if entry.frontmatter.milestone %}<span class="milestone-badge">Milestone</span>{% endif %}
+  </h1>
+  {% if entry.frontmatter.author_label %}
+  <p class="entry-meta">by {{ entry.frontmatter.author_label }}</p>
+  {% endif %}
+  {% if cover %}
+  <figure class="entry-cover">
+    <img class="plate plate-cover" src="/media/{{ cover.path }}" alt="{{ cover.alt }}" loading="lazy">
+    {% if cover.caption %}<figcaption>{{ cover.caption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+  <div class="entry-body">{{ entry.body_html | safe }}</div>
+  {% if gallery %}
+  <div class="entry-media">
+    {% for media in gallery %}
+      <figure>
+        <img class="plate" src="/media/{{ media.path }}" alt="{{ media.alt }}" loading="lazy">
+        {% if media.caption %}<figcaption>{{ media.caption }}</figcaption>{% endif %}
+      </figure>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if entry.frontmatter.tags %}
+  <p class="entry-tags">
+    {% for tag in entry.frontmatter.tags %}<a class="tag" href="/tags/{{ tag }}">#{{ tag }}</a>{% endfor %}
+  </p>
+  {% endif %}
+  {% if entry.frontmatter.family_members %}
+  <p class="entry-family">
+    {% for label in entry.frontmatter.family_members %}<a class="family-chip" href="/family/{{ label }}">{{ label }}</a>{% endfor %}
+  </p>
+  {% endif %}
+</article>
+<p class="back-link"><a href="/">&larr; Back to the diary</a></p>
+{% endblock %}
