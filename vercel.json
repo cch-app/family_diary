@@ -1,8 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
   "functions": {
     "api/index.py": {
-      "includeFiles": "{content,diary/templates,public}/**"
+      "includeFiles": "{content,diary/templates}/**"
     }
   },
   "rewrites": [

@@ -19,13 +19,33 @@ Deploy as one function, `api/index.py`, which imports the FastAPI `app` from
 
 ```json
 {
-  "functions": { "api/index.py": { "includeFiles": "{content,diary/templates,public}/**" } },
+  "framework": null,
+  "functions": { "api/index.py": { "includeFiles": "{content,diary/templates}/**" } },
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }
 ```
 
-`includeFiles` explicitly bundles `content/`, `diary/templates/`, and `public/`,
-since these are non-code assets not picked up by Vercel's import-graph analysis.
+`framework: null` forces Vercel's Framework Preset to "Other". Without it, Vercel
+auto-detects "FastAPI" (it scans `pyproject.toml`/`requirements.txt` for the string
+`fastapi`) and applies that framework's own zero-config `defaultRoutes`, which
+conflicts with this project's explicit `rewrites`-to-`api/index.py` catch-all —
+every request ends up unmatched by FastAPI's router and falls through to this
+app's own 404 handler, even for routes that exist (e.g. `/`). Setting `framework:
+null` makes this `vercel.json` the sole source of routing truth, matching the
+single-function architecture this ADR decided on.
+
+`includeFiles` bundles `content/` and `diary/templates/`, non-code assets not
+picked up by Vercel's import-graph analysis. `public/` is deliberately **not**
+included here: Vercel's Python builder always excludes `public/**` from the
+function bundle and serves it directly off its own CDN instead (filesystem
+routes are checked before the catch-all rewrite reaches the function), so
+`public/static/css/style.css` is already served at `/static/css/style.css`
+with no code involved. `diary/main.py` only mounts `/static` via
+`StaticFiles` when `public/static` exists on disk (true locally and in
+Docker, false on Vercel) — an earlier version mounted it unconditionally,
+which crashed the whole app on import on Vercel since the directory is never
+present there.
+
 `.vercelignore` separately excludes `.venv/`, `tests/`, `backups/`, and
 `content/denylists/*.yaml` from ever being uploaded, as defense in depth alongside
 `.gitignore` in case of a non-git-based deploy path.
