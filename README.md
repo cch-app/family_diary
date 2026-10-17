@@ -142,9 +142,14 @@ which only ever include published, reviewed-safe content.
 
 The app deploys to Vercel as a single Python serverless function. `vercel.json` routes
 all paths to `api/index.py`, which imports the FastAPI `app` from `diary.main`, and
-declares `includeFiles` for `content/`, `diary/templates/`, and `public/` so Vercel
-bundles them alongside the code. `.vercelignore` excludes `.venv/`, `tests/`,
-`backups/`, and the local denylist YAML files from any deploy.
+declares `includeFiles` for `content/` and `diary/templates/` so Vercel bundles them
+alongside the code. `public/` is deliberately left out of `includeFiles`: Vercel's
+Python builder always excludes `public/**` from the function bundle and serves it
+directly from its own CDN instead, so `diary/main.py` only mounts `/static` when
+`public/static` exists on disk (true locally/in Docker, false on Vercel) — see
+[`_ADR/0005`](./_ADR/0005-single-vercel-function-entrypoint.md). `.vercelignore`
+excludes `.venv/`, `tests/`, `backups/`, and the local denylist YAML files from any
+deploy.
 
 ## Design decisions
 

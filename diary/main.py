@@ -12,9 +12,12 @@ from diary.templating import templates
 
 app = FastAPI(title="Family Diary")
 
-app.mount(
-    "/static", StaticFiles(directory=str(PROJECT_ROOT / "public" / "static")), name="static"
-)
+# On Vercel, files under public/ are served directly by the platform's CDN
+# (see ADR 0005) and are never bundled into this function, so the directory
+# doesn't exist at runtime there. Mounting is local/Docker-dev only.
+_static_dir = PROJECT_ROOT / "public" / "static"
+if _static_dir.is_dir():
+    app.mount("/static", StaticFiles(directory=str(_static_dir)), name="static")
 
 app.include_router(pages.router)
 app.include_router(search.router)
